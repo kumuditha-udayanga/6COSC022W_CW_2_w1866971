@@ -1,5 +1,7 @@
-import db from "../config/db.config.js";
+import sqlite3 from "sqlite3";
 import User from "../models/user.js";
+
+const db = new sqlite3.Database("../../w1866971-cw2.db");
 
 class UserDAO {
   static createTable() {
