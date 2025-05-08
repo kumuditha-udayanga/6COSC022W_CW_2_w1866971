@@ -33,6 +33,28 @@ class UserDAO {
       }
     });
   }
+
+  static findUserByEmail(email, callback) {
+    const sql = `SELECT * FROM users WHERE email = ?`;
+    db.get(sql, [email], (err, row) => {
+      if (row) {
+        callback(err, new User(row.id, row.username, row.email, row.password));
+      } else {
+        callback(err, null);
+      }
+    });
+  }
+
+  static findUserByUsername(username, callback) {
+    const sql = `SELECT * FROM users WHERE username = ?`;
+    db.get(sql, [username], (err, row) => {
+      if (row) {
+        callback(err, new User(row.id, row.username, row.email, row.password));
+      } else {
+        callback(err, null);
+      }
+    });
+  }
 }
 
 module.exports = UserDAO;
