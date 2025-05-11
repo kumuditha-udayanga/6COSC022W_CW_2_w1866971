@@ -1,4 +1,6 @@
-import { userDao} from '../dao/user.dao.js';
+import userDao from '../dao/UserDao';
+import bcrypt from 'bcrypt';
+
 class User {
     constructor(id, username, email, password) {
       this.id = id;
@@ -25,6 +27,26 @@ class User {
       const userData = await userDao.findUserById(userId);
       return new User(userData);
   }
+
+  static async findById(id) {
+      const userData = await userDao.findUserById(id);
+      if (!userData) {
+          return null;
+      }
+      return new User(userData);
+  }
+
+  static async findByUsername(username) {
+      const userData = await userDao.findUserByUsername(username);
+      if (!userData) {
+          return null;
+      }
+      return new User(userData);
+  }
+
+  async verifyPassword(password) {
+      return await bcrypt.compare(password, this.password);
+  }
 }
   
-module.exports = User;  
+export default User; 
