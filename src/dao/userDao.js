@@ -3,7 +3,7 @@ import User from "../models/user.js";
 
 const db = new sqlite3.Database("../../w1866971-cw2.db");
 
-class UserDAO {
+class UserDao {
   static createTable() {
     const sql = `
       CREATE TABLE IF NOT EXISTS users (
@@ -57,4 +57,4 @@ class UserDAO {
   }
 }
 
-module.exports = UserDAO;
+export default new UserDao();
