@@ -1,4 +1,4 @@
-import blogPost from '../models/blogPost';
+import blogPost from '../models/blogPost.js';
 import sqlite3 from "sqlite3";
 
 const db = new sqlite3.Database("../../w1866971-cw2.db");
