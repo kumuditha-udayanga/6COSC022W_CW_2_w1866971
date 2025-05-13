@@ -1,4 +1,4 @@
-import userDao from '../dao/UserDao';
+import userDao from '../dao/userDao.js';
 import bcrypt from 'bcrypt';
 
 class User {
