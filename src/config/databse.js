@@ -44,5 +44,4 @@ class Database {
         return this.db;
     }
 }
-
-module.exports = Database;
+export default new Database;
