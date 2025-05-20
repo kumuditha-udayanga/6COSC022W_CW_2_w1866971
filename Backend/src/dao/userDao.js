@@ -1,60 +1,59 @@
-import sqlite3 from "sqlite3";
+import Database from "../config/databse.js";
 import User from "../models/user.js";
 
-const db = new sqlite3.Database("../../w1866971-cw2.db");
-
 class UserDao {
-  static createTable() {
-    const sql = `
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL UNIQUE,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
-      )
-    `;
-    db.run(sql);
-  }
+    async create(user) {
+        const sql = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
+        return new Promise((resolve, reject) => {
+            Database.getDb().run(sql, [user.username, user.email, user.password], function (err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
 
-  static create(user, callback) {
-    const sql = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
-    db.run(sql, [user.username, user.email, user.password], function(err) {
-      callback(err, this.lastID);
-    });
-  }
+    async findById(id) {
+        const sql = `SELECT * FROM users WHERE id = ?`;
+        return new Promise((resolve, reject) => {
+            Database.getDb().get(sql, [id], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            });
+        });
+    }
 
-  static findById(id, callback) {
-    const sql = `SELECT * FROM users WHERE id = ?`;
-    db.get(sql, [id], (err, row) => {
-      if (row) {
-        callback(err, new User(row.id, row.username, row.email, row.password));
-      } else {
-        callback(err, null);
-      }
-    });
-  }
+    async findUserByEmail(email) {
+        const sql = `SELECT * FROM users WHERE email = ?`;
+        return new Promise((resolve, reject) => {
+            Database.getDb().get(sql, [email], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            });
+        });
 
-  static findUserByEmail(email, callback) {
-    const sql = `SELECT * FROM users WHERE email = ?`;
-    db.get(sql, [email], (err, row) => {
-      if (row) {
-        callback(err, new User(row.id, row.username, row.email, row.password));
-      } else {
-        callback(err, null);
-      }
-    });
-  }
+    }
 
-  static findUserByUsername(username, callback) {
-    const sql = `SELECT * FROM users WHERE username = ?`;
-    db.get(sql, [username], (err, row) => {
-      if (row) {
-        callback(err, new User(row.id, row.username, row.email, row.password));
-      } else {
-        callback(err, null);
-      }
-    });
-  }
+    async findUserByUsername(username) {
+        const sql = `SELECT * FROM users WHERE username = ?`;
+        return new Promise((resolve, reject) => {
+            Database.getDb().get(sql, [username], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            });
+        });
+    }
 }
 
 export default new UserDao();
