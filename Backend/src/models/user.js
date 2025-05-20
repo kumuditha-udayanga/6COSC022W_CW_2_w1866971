@@ -1,12 +1,12 @@
-import userDao from '../dao/userDao.js';
+import UserDao from '../dao/userDao.js';
 import bcrypt from 'bcrypt';
 
 class User {
-    constructor(id, username, email, password) {
-      this.id = id;
-      this.username = username;
-      this.email = email;
-      this.password = password;
+    constructor(user) {
+      this.id = user.id;
+      this.username = user.username;
+      this.email = user.email;
+      this.password = user.password;
     }
 
     static async create({ email, password, username }) {
@@ -19,17 +19,23 @@ class User {
       if (username.length < 3) {
           throw new Error('Username must be at least 3 characters');
       }
-      const existingUser = await userDao.findUserByEmail(email);
+      const existingUser = await UserDao.findUserByEmail(email);
+
       if (existingUser) {
+          console.log("IN EXISTS")
           throw new Error('Email already exists');
       }
-      const userId = await userDao.createUser(email, password, username);
-      const userData = await userDao.findUserById(userId);
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      password = hashedPassword
+
+      const userId = await UserDao.create({email, password, username});
+      const userData = await UserDao.findById(userId);
       return new User(userData);
   }
 
   static async findById(id) {
-      const userData = await userDao.findUserById(id);
+      const userData = await UserDao.findById(id);
       if (!userData) {
           return null;
       }
@@ -37,14 +43,22 @@ class User {
   }
 
   static async findByUsername(username) {
-      const userData = await userDao.findUserByUsername(username);
+      const userData = await UserDao.findUserByUsername(username);
       if (!userData) {
           return null;
       }
       return new User(userData);
   }
 
-  async verifyPassword(password) {
+    static async findByEmail(email) {
+        const userData = await UserDao.findUserByEmail(email);
+        if (!userData) {
+            return null;
+        }
+        return new User(userData);
+    }
+
+  async verifyPassword(password, hashedPassword) {
       return await bcrypt.compare(password, this.password);
   }
 }
