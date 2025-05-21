@@ -74,7 +74,7 @@ export const deleteBlog = async (req, res) => {
 
 export const searchBlogs = async (req, res) => {
     try {
-        const { country, username } = req.body;
+        const { country, username } = req.query;
         let blogs = [];
 
         if (country) {
@@ -93,7 +93,7 @@ export const searchBlogs = async (req, res) => {
 };
 
 export const getRecentBlogs = async (req, res) => {
-    console.log(req);
+    // console.log(req);
     try {
         console.log("Test controller");
         const blogs = await BlogPost.findRecent();
@@ -102,3 +102,24 @@ export const getRecentBlogs = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch recent blogs' });
     }
 };
+
+export const getPopularBlogs = async (req, res) => {
+    try {
+        const {sort, limit = 10, offset = 0} = req.query;
+        console.log(sort);
+
+        if (!['liked', 'commented'].includes(sort)) {
+            return res.status(400).json({error: 'Invalid sort parameter. Use "liked" or "commented".'});
+        }
+        let blogs = [];
+        if (sort === 'liked') {
+            blogs = await BlogPost.findMostLiked();
+        } else if (sort === 'commented') {
+            console.log("here");
+            blogs = await BlogPost.findMostCommented();
+        }
+        res.json({blogs});
+    } catch (error) {
+        res.status(500).json({error: 'Failed to fetch recent blogs'});
+    }
+}

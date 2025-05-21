@@ -55,7 +55,6 @@ class BlogPost {
   }
 
   static async findRecent(limit = 10) {
-    console.log("TEst recent");
     const blogsData = await BlogPostDao.getRecentBlogs(limit);
     return blogsData.map(data => new BlogPost(data));
   }
@@ -86,6 +85,17 @@ class BlogPost {
       if (changes === 0) {
         throw new Error('Delete failed or unauthorized');
       }
+  }
+
+  static async findMostLiked(limit = 10) {
+    const blogsData = await BlogPostDao.getMostLikedBlogs(limit);
+    return blogsData.map(data => new BlogPost(data));
+  }
+
+  static async findMostCommented(limit = 10) {
+    const blogsData = await BlogPostDao.getMostCommentedBlogs(limit);
+    // console.log(blogsData);
+    return blogsData.map(data => new BlogPost(data));
   }
 }
   

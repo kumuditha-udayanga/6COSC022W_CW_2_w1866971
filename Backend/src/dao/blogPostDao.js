@@ -98,6 +98,35 @@ class BlogPostDAO {
             });
         });
     }
+
+    async getMostLikedBlogs(limit = 10) {
+        const sql = `SELECT b.*, u.username, COUNT(l.id) as like_count FROM blog_posts b JOIN users u ON b.user_id = u.id LEFT JOIN likes l ON b.id = l.blog_id AND l.is_like = 1 GROUP BY b.id ORDER BY like_count DESC, b.created_at DESC LIMIT ? OFFSET ?`;
+        return new Promise((resolve, reject) => {
+            Database.getDb().all(sql, [limit, 0], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log(rows);
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    async getMostCommentedBlogs(limit = 10) {
+        const sql = `SELECT b.*, u.username, COUNT(c.id) as comment_count FROM blog_posts b JOIN users u ON b.user_id = u.id LEFT JOIN comments c ON b.id = c.blog_id GROUP BY b.id ORDER BY comment_count DESC, b.created_at DESC LIMIT ? OFFSET ?`
+        return new Promise((resolve, reject) => {
+            Database.getDb().all(sql, [limit, 0], (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    console.log(rows);
+                    resolve(rows);
+                }
+            });
+        });
+    }
 }
 
 export default new BlogPostDAO();
