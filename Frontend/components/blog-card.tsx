@@ -24,9 +24,6 @@ export function BlogCard({ blog }: BlogCardProps) {
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
-        <Link href={`/profile/${blog.userId}`} className="flex items-center space-x-2">
-          <span className="text-sm">{blog.username}</span>
-        </Link>
         <span className="text-xs text-muted-foreground">{formatDate(blog.created_at)}</span>
       </CardFooter>
     </Card>

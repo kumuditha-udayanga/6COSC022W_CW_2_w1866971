@@ -4,12 +4,12 @@ import { useEffect, useState } from "react"
 import { BlogCard } from "@/components/blog-card"
 import { BlogSkeleton } from "@/components/blog-skeleton"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner";
 import { api } from "@/lib/api"
 import type { Blog } from "@/lib/types"
 
 interface BlogListProps {
-  type: "recent" | "popular" | "search"
+  type: "recent" | "popular" | "search" | "followed"
   sort?: "liked" | "commented"
   searchParams?: {
     country?: string
@@ -23,7 +23,6 @@ export function BlogList({ type, sort = "liked", searchParams }: BlogListProps) 
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const { toast } = useToast()
   const limit = 6
 
   useEffect(() => {
@@ -41,6 +40,9 @@ export function BlogList({ type, sort = "liked", searchParams }: BlogListProps) 
           case "popular":
             data = await api.getPopularBlogs(sort, limit, page * limit)
             break
+          case "followed":
+            data = await api.getFollowedBlogs(limit, page * limit)
+            break
           case "search":
             if (searchParams) {
               data = await api.searchBlogs(searchParams.country, searchParams.username, limit, page * limit)
@@ -57,11 +59,7 @@ export function BlogList({ type, sort = "liked", searchParams }: BlogListProps) 
         setHasMore(data.length === limit)
       } catch (error: any) {
         setError(error.message || "Failed to load blogs")
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error.message || "Failed to load blogs",
-        })
+        toast.error( "Failed to load blogs")
       } finally {
         setIsLoading(false)
       }
