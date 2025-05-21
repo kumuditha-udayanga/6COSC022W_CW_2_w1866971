@@ -134,7 +134,7 @@ class Api {
     }
   }
 
-  async updateBlog(id: number, data: { title?: string; content?: string; country?: string; visit_date?: string }) {
+  async updateBlog(id: number, data: { title?: string; content?: string; country?: string; visitDate?: string }) {
     try {
       const response = await axiosInstance.put(`/blogs/${id}`, data)
       return response.data

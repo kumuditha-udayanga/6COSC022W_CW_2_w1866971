@@ -1,5 +1,5 @@
 export interface User {
-  userId: number
+  user_id: number
   apiKey: string
   username: string
 }
@@ -10,12 +10,13 @@ export interface Blog {
   content: string
   country: string
   visit_date: string
-  userId: number
+  user_id: number
   username: string
   created_at: string
 }
 
-export interface BlogDetail extends Blog {
+export interface BlogDetail {
+  blog: Blog
   likes: {
     likes: number
     dislikes: number
