@@ -7,6 +7,7 @@ import blogRoutes from './src/routes/blogRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
 import followRoutes from './src/routes/followRoutes.js';
 import commentRoutes from './src/routes/commentRoutes.js';
+import Database from './src/config/databse.js';
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+Database.initializeDatabase();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes);

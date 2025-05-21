@@ -1,6 +1,6 @@
-import commentDao from '../dao/commentDao.js';
-import userDao from '../dao/userDao.js';
-import blogDao from '../dao/blogPostDao.js';
+import CommentDao from '../dao/commentDao.js';
+import UserDao from '../dao/userDao.js';
+import BlogPostDao from '../dao/blogPostDao.js';
 
 class Comment {
     constructor({ id, blog_id, user_id, content, created_at, username }) {
@@ -19,19 +19,19 @@ class Comment {
         if (content.length < 1) {
             throw new Error('Comment must not be empty');
         }
-        const blog = await blogDao.getBlogById(blogId);
-        const user = await userDao.findUserById(userId);
+        const blog = await BlogPostDao.getBlogById(blogId);
+        const user = await UserDao.findById(userId);
         if (!blog || !user) {
             throw new Error('Blog or user not found');
         }
-        const commentId = await commentDao.createComment(blogId, userId, content);
-        const comments = await commentDao.getCommentsByBlogId(blogId);
+        const commentId = await CommentDao.createComment(blogId, userId, content);
+        const comments = await CommentDao.getCommentsByBlogId(blogId);
         const newComment = comments.find(c => c.id === commentId);
         return new Comment(newComment);
     }
 
     static async findByBlogId(blogId) {
-        const commentsData = await commentDao.getCommentsByBlogId(blogId);
+        const commentsData = await CommentDao.getCommentsByBlogId(blogId);
         return commentsData.map(data => new Comment(data));
     }
 }

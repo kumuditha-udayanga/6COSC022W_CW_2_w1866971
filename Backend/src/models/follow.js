@@ -1,5 +1,5 @@
-import followDao from '../dao/followDao.js';
-import userDao from '../dao/userDao.js';
+import FollowDao from '../dao/followDao.js';
+import UserDao from '../dao/userDao.js';
 import User from './user.js';
 import Blog from './blogPost.js';
 
@@ -14,34 +14,35 @@ class Follow {
         if (followerId === followedId) {
             throw new Error('Cannot follow yourself');
         }
-        const follower = await userDao.findUserById(followerId);
-        const followed = await userDao.findUserById(followedId);
+        const follower = await UserDao.findById(followerId);
+        const followed = await UserDao.findById(followedId);
         if (!follower || !followed) {
             throw new Error('User not found');
         }
-        const followId = await followDao.followUser(followerId, followedId);
+        const followId = await FollowDao.followUser(followerId, followedId);
         return new Follow({ id: followId, follower_id: followerId, followed_id: followedId });
     }
 
     static async delete({ followerId, followedId }) {
-        const changes = await followDao.unfollowUser(followerId, followedId);
+        const changes = await FollowDao.unfollowUser(followerId, followedId);
         if (changes === 0) {
             throw new Error('Unfollow failed');
         }
     }
 
     static async getFollowers(userId) {
-        const followersData = await followDao.getFollowers(userId);
+        const followersData = await FollowDao.getFollowers(userId);
         return followersData.map(data => new User(data));
     }
 
     static async getFollowing(userId) {
-        const followingData = await followDao.getFollowing(userId);
+        const followingData = await FollowDao.getFollowing(userId);
         return followingData.map(data => new User(data));
     }
 
     static async getFollowedBlogs(userId) {
-        const blogsData = await followDao.getFollowedBlogs(userId);
+        console.log(userId);
+        const blogsData = await FollowDao.getFollowedBlogs(userId);
         return blogsData.map(data => new Blog(data));
     }
 }

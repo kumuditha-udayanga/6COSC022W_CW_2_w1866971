@@ -1,6 +1,6 @@
-import commentDao from '../dao/commentDao.js';
-import blogDao from '../dao/blogPostDao.js';
-import userDao from '../dao/userDao.js';
+import BlogPostDao from '../dao/blogPostDao.js';
+import UserDao from '../dao/userDao.js';
+import LikeDao from "../dao/likeDao.js";
 
 class Like {
     constructor({ id, blog_id, user_id, is_like }) {
@@ -11,17 +11,17 @@ class Like {
     }
 
     static async create({ blogId, userId, isLike }) {
-        const blog = await blogDao.getBlogById(blogId);
-        const user = await userDao.findUserById(userId);
+        const blog = await BlogPostDao.getBlogById(blogId);
+        const user = await UserDao.findById(userId);
         if (!blog || !user) {
             throw new Error('Blog or user not found');
         }
-        const likeId = await commentDao.createLike(blogId, userId, isLike);
+        const likeId = await LikeDao.createLike(blogId, userId, isLike);
         return new Like({ id: likeId, blog_id: blogId, user_id: userId, is_like: isLike });
     }
 
     static async getCounts(blogId) {
-        const counts = await commentDao.getLikesCount(blogId);
+        const counts = await LikeDao.getLikesCount(blogId);
         return counts;
     }
 }
