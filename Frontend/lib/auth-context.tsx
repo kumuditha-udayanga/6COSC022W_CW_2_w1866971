@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (apiKey && userId) {
       setUser({
-        userId: Number(userId),
+        user_id: Number(userId),
         apiKey,
         username: username || "",
       })
@@ -47,16 +47,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const { apiKey, userId } = await api.login(email, password)
+      const { apiKey, user_id } = await api.login(email, password)
 
-      const profile = await api.getUserProfile(userId)
+      const profile = await api.getUserProfile(user_id)
       const username = profile.user.username
 
       Cookies.set("apiKey", apiKey, { expires: 7 })
-      Cookies.set("userId", userId.toString(), { expires: 7 })
+      Cookies.set("userId", user_id.toString(), { expires: 7 })
       Cookies.set("username", username, { expires: 7 })
 
-      setUser({ userId, apiKey, username })
+      setUser({ user_id, apiKey, username })
 
       api.setApiKey(apiKey)
     } catch (error) {

@@ -25,7 +25,7 @@ export const login = async (req, res) => {
         const apiKey = await SessionDao.create(user);
         sessions[apiKey] = user.id;
         res.cookie('apiKey', apiKey, {httpOnly: true});
-        res.json({message: 'Login successful', userId: user.id});
+        res.json({message: 'Login successful', user_id: user.id});
     } catch (error) {
         res.status(500).json({error: 'Login failed'});
     }
