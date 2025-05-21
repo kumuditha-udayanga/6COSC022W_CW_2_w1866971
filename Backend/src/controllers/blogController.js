@@ -1,4 +1,4 @@
-import Blog from '../models/blogPost.js';
+import BlogPost from '../models/blogPost.js';
 import User from '../models/user.js';
 import Comment from '../models/comment.js';
 import Like from '../models/like.js';
@@ -7,7 +7,7 @@ export const createBlog = async (req, res) => {
     try {
         const { title, content, country, visitDate } = req.body;
         const userId = req.userId;
-        const blog = await Blog.create({ title, content, country, visitDate, userId });
+        const blog = await BlogPost.create({ title, content, country, visitDate, userId });
         res.status(201).json({ message: 'Blog created', blog });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -17,11 +17,16 @@ export const createBlog = async (req, res) => {
 export const getBlog = async (req, res) => {
     try {
         const { id } = req.params;
-        const blog = await Blog.findById(id);
+        const blog = await BlogPost.findById(id);
         if (!blog) {
             return res.status(404).json({ error: 'Blog not found' });
         }
-        const user = await User.findById(blog.user_id);
+        const userData = await User.findById(blog.user_id);
+        const user = {
+            id: userData.id,
+            username: userData.username,
+            email: userData.email
+        };
         const comments = await Comment.findByBlogId(id);
         const likes = await Like.getCounts(id);
         res.json({ blog, user, comments, likes });
@@ -35,7 +40,7 @@ export const updateBlog = async (req, res) => {
         const { id } = req.params;
         const { title, content, country, visitDate } = req.body;
         const userId = req.userId;
-        const blog = await Blog.findById(id);
+        const blog = await BlogPost.findById(id);
         if (!blog) {
             return res.status(404).json({ error: 'Blog not found' });
         }
@@ -53,7 +58,7 @@ export const deleteBlog = async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.userId;
-        const blog = await Blog.findById(id);
+        const blog = await BlogPost.findById(id);
         if (!blog) {
             return res.status(404).json({ error: 'Blog not found' });
         }
@@ -69,16 +74,17 @@ export const deleteBlog = async (req, res) => {
 
 export const searchBlogs = async (req, res) => {
     try {
-        const { country, username } = req.query;
+        const { country, username } = req.body;
         let blogs = [];
+
         if (country) {
-            blogs = await Blog.searchByCountry(country);
+            blogs = await BlogPost.searchByCountry(country);
         } else if (username) {
             const user = await User.findByUsername(username);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            blogs = await Blog.findByUserId(user.id);
+            blogs = await BlogPost.findByUserId(user.id);
         }
         res.json({ blogs });
     } catch (error) {
@@ -87,8 +93,10 @@ export const searchBlogs = async (req, res) => {
 };
 
 export const getRecentBlogs = async (req, res) => {
+    console.log(req);
     try {
-        const blogs = await Blog.findRecent();
+        console.log("Test controller");
+        const blogs = await BlogPost.findRecent();
         res.json({ blogs });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch recent blogs' });
