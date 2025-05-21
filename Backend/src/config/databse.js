@@ -34,9 +34,54 @@ class Database {
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )`;
 
+        const createFollowsTable = `
+            CREATE TABLE IF NOT EXISTS follows (
+                follower_id INTEGER NOT NULL,
+                followed_id INTEGER NOT NULL,
+                PRIMARY KEY (follower_id, followed_id),
+                FOREIGN KEY (follower_id) REFERENCES users(id),
+                FOREIGN KEY (followed_id) REFERENCES users(id)
+            )`;
+
+        const createLikesTable = `
+            CREATE TABLE IF NOT EXISTS likes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                blog_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                is_like INTEGER NOT NULL,
+                FOREIGN KEY (blog_id) REFERENCES blogs(id),
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                UNIQUE (blog_id, user_id)
+            )`;
+
+        const createCommentsTable = `
+            CREATE TABLE IF NOT EXISTS comments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                blog_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                content TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (blog_id) REFERENCES blogs(id),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )`;
+
+        const createSessionsTable = `
+            CREATE TABLE IF NOT EXISTS sessions (
+                api_key TEXT PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )`;
+
+        
         this.db.serialize(() => {
             this.db.run(createUsersTable);
             this.db.run(createBlogsTable);
+            this.db.run(createFollowsTable);
+            this.db.run(createLikesTable);
+            this.db.run(createCommentsTable);
+            this.db.run(createSessionsTable);
+            console.log("DB connected")
         });
     }
 
