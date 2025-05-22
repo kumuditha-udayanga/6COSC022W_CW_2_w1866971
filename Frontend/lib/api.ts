@@ -5,7 +5,7 @@ import type { Blog, BlogDetail, Comment, UserProfile } from "@/lib/types"
 dotenv.config();
 
 const axiosInstance = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
