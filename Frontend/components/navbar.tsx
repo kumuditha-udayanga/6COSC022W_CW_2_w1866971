@@ -33,8 +33,7 @@ export function Navbar() {
 
       if (userId && username && !user) {
         try {
-          // Optionally verify with API
-          const userData = await api.getCurrentUser(userId);
+          const userData = await api.getUserProfile(userId);
           setUser({ user_id: userId, username });
         } catch (error) {
           console.error("Failed to restore user:", error);
