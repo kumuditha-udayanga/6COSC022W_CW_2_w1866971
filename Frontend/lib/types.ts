@@ -22,6 +22,7 @@ export interface BlogDetail {
     dislikes: number
   }
   comments: Comment[]
+  user: User
 }
 
 export interface Comment {

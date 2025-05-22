@@ -1,8 +1,11 @@
 import axios, { AxiosError } from "axios"
+import dotenv from "dotenv";
 import type { Blog, BlogDetail, Comment, UserProfile } from "@/lib/types"
 
+dotenv.config();
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: process.env.API_URL,
   headers: {
     "Content-Type": "application/json",
   },
