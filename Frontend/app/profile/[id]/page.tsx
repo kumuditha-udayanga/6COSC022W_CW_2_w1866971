@@ -158,7 +158,7 @@ export default function ProfilePage() {
             {followers.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {followers.map((follower) => (
-                  <Link href={`/profile/${follower.id}`} className="flex items-center space-x-2 no-underline">
+                  <Link href={`/profile/${follower.id}`} className="flex items-center space-x-2 no-underline" key={follower.id}>
                     <div key={follower.id} className="flex items-center space-x-2 rounded-lg border p-3">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback>

@@ -50,7 +50,7 @@ export default function BlogDetailPage() {
     if (id) {
       fetchBlog()
     }
-  }, [id, toast])
+  }, [id, toast, comment, isLiking])
 
   const handleLike = async (isLike: boolean) => {
     if (!user) {
@@ -243,7 +243,7 @@ export default function BlogDetailPage() {
             <div className="mt-4 flex items-center space-x-2">
               <Link href={`/profile/${blog.blog.user_id}`} className="flex items-center space-x-2 no-underline">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>{user?.username ? user?.username.substring(0, 2).toUpperCase() : "UN"}</AvatarFallback>
+                  <AvatarFallback>{blog?.user.username ? blog?.user.username.substring(0, 2).toUpperCase() : "UN"}</AvatarFallback>
                 </Avatar>
                 <span className="font-medium">{blog.blog.username}</span>
               </Link>
