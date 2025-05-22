@@ -5,11 +5,12 @@ class UserDao {
     async create(user) {
         const sql = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
         return new Promise((resolve, reject) => {
-            Database.getDb().run(sql, [user.username, user.email, user.password], function (err) {
+            Database.getDb().run(sql, [user.username, user.email, user.password], function (err, row) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    console.log("Resolved");
+                    resolve(this.lastID);
                 }
             });
         });

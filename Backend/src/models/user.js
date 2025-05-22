@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 class User {
     constructor(user) {
+        console.log(user);
       this.id = user.id;
       this.username = user.username;
       this.email = user.email;
@@ -30,7 +31,9 @@ class User {
       password = hashedPassword
 
       const userId = await UserDao.create({email, password, username});
+      console.log(userId);
       const userData = await UserDao.findById(userId);
+      console.log(userData);
       return new User(userData);
   }
 

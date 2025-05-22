@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3001",
+    origin: process.env.ORIGIN_URL,
     credentials: true
 }));
 app.use(express.json());
